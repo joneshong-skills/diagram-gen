@@ -1,0 +1,9 @@
+{
+  "name": "diagram-gen",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "beautiful-mermaid": "^0.3.0"
+  }
+}

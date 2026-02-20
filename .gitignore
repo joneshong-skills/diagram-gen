@@ -3,3 +3,6 @@ package-lock.json
 *.mmd
 *.svg
 !assets/**/*.svg
+.venv/
+__pycache__/
+*.pyc

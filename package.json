@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "beautiful-mermaid": "^0.1.3"
   }
 }

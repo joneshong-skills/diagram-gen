@@ -20,7 +20,21 @@ from mcp.server import FastMCP
 SKILL_DIR = Path(__file__).resolve().parent.parent
 RENDER_SCRIPT = SKILL_DIR / "scripts" / "render.mjs"
 NODE_BIN = "node"
-DEFAULT_PORT = 8850
+SKILL_NAME = "diagram-gen"
+
+
+def _get_default_port() -> int:
+    """Read port from shared registry, fallback to 8850."""
+    registry = SKILL_DIR.parent / "_shared" / "mcp-ports.json"
+    try:
+        import json
+        data = json.loads(registry.read_text())
+        return data["ports"].get(SKILL_NAME, 8850)
+    except (FileNotFoundError, KeyError, json.JSONDecodeError):
+        return 8850
+
+
+DEFAULT_PORT = _get_default_port()
 
 mcp = FastMCP(
     "diagram-gen",

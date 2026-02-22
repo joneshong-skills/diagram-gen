@@ -5,7 +5,8 @@ description: >-
   "generate a flowchart", "draw an architecture diagram", "render Mermaid",
   "visualize a workflow", "畫流程圖", "產生架構圖", mentions diagram generation,
   or discusses visualizing code, systems, processes, or data models.
-version: 0.1.0
+version: 0.2.0
+tools: Read, Write, Bash, Glob, sandbox_execute
 ---
 
 # Diagram Gen
@@ -13,6 +14,14 @@ version: 0.1.0
 Generate professional diagrams from natural language or structured descriptions.
 Primary output is Mermaid syntax (auto-layout, GitHub/Obsidian native), with SVG
 rendering via `beautiful-mermaid` for polished visuals.
+
+## Agent Delegation
+
+Delegate Mermaid code generation and SVG rendering to `designer` agent.
+
+- **Agent**: `designer` (Sonnet, maxTurns=20)
+- **Tools**: Read, Write, Edit, Bash, Glob
+- **Delegate when**: generating Mermaid syntax, applying themes, rendering SVG files
 
 ## Output Formats
 
@@ -29,6 +38,9 @@ Default to **Mermaid code block** unless the user requests a file or mentions SV
 ### Step 1 — Analyze Content
 
 Identify the core structure:
+
+**Sandbox acceleration**: When generating diagrams from a codebase, use `sandbox_execute` to batch-scan source files — extract function signatures, class hierarchies, import relationships, and module boundaries in one call. Returns a structured code map instead of loading full source files into context.
+
 - **Sequential steps** → Flowchart
 - **Interactions over time** → Sequence diagram
 - **States and transitions** → State diagram
@@ -200,6 +212,34 @@ Before outputting any diagram, verify:
 - Under 30 nodes (split if larger)
 - No emoji in diagram text — use labels or color coding
 - Compatible with GitHub/Obsidian Mermaid renderers
+
+## Sandbox Optimization
+
+Step 1 (Analyze Content) benefits from sandbox execution:
+
+- **Codebase diagrams**: Batch-scan source files to extract structure (classes, functions, imports, module boundaries) in one `sandbox_execute` call. Returns a structured code map (~300 tokens) instead of reading 10+ source files into context.
+- **Data model diagrams**: Batch-read schema files (SQL, Prisma, TypeORM) and extract entity-relationship data.
+
+Principle: **Code structure extraction → sandbox; diagram design + Mermaid generation → LLM.**
+
+## Continuous Improvement
+
+This skill evolves with each use. After every invocation:
+
+1. **Reflect** — Identify what worked, what caused friction, and any unexpected issues
+2. **Record** — Append a concise lesson to `lessons.md` in this skill's directory
+3. **Refine** — When a pattern recurs (2+ times), update SKILL.md directly
+
+### lessons.md Entry Format
+
+```
+### YYYY-MM-DD — Brief title
+- **Friction**: What went wrong or was suboptimal
+- **Fix**: How it was resolved
+- **Rule**: Generalizable takeaway for future invocations
+```
+
+Accumulated lessons signal when to run `/skill-optimizer` for a deeper structural review.
 
 ## Additional Resources
 
